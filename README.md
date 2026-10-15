@@ -1,167 +1,182 @@
-<h1 align="center">🎬 Movie Recommendation System using NLP & Streamlit</h1>
+# 🎬 Movie Recommendation System Using NLP and Python
 
-<p align="center">
-A content-based movie recommender system that suggests similar movies based on genres, keywords, and descriptions. Built using Natural Language Processing (NLP), TF-IDF vectorization, and cosine similarity, and deployed with a sleek web UI via Streamlit.
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.x-blue?logo=python" />
-  <img src="https://img.shields.io/badge/Model-Content%20Based%20Recommender-brightgreen" />
-  <img src="https://img.shields.io/badge/NLP-TFIDF%20%2B%20Cosine-orange" />
-  <img src="https://img.shields.io/badge/UI-Streamlit-red" />
-  <img src="https://img.shields.io/badge/API-TMDB-lightgrey" />
-</p>
+A content-based movie recommender web application built with **Python**, **Natural Language Processing (NLP)**, **TF-IDF vectorization**, **Cosine Similarity**, and **Streamlit**.
 
 ---
 
-## 🧠 Problem Statement
-
-Given a dataset of movies and their metadata, build a **content-based recommendation system** that suggests the most similar movies to a user-provided title using **textual similarity** techniques.
-
----
-
-## 🎬 Dataset Details
-
-* **Source:** `movies.csv` (custom-built from Kaggle TMDb dataset)
-* **Columns Used:**
-
-  * `title` – Movie title
-  * `genres`, `keywords`, `overview` – Main textual features for similarity
-  * `id` – TMDb ID (used to fetch posters)
-* **Poster Data:** Pulled dynamically via **TMDb API**
+## 👥 Development Team
+- **Rugved Kulkarni**
+- **Siddhant Gaikwad**
 
 ---
 
-## 🚀 Project Workflow
+## 📖 Project Overview
+This project implements a content-based movie recommendation system using Natural Language Processing. It processes movie information, transforms textual features using TF-IDF vectorization, and calculates cosine similarity to identify and recommend movies with similar content.
 
-1. **Import Dependencies**
-2. **Load Dataset**
-3. **Data Preprocessing**
-
-   * Combine genres, keywords, and overview into one feature
-   * Clean and tokenize text
-   * Remove stopwords using NLTK
-4. **TF-IDF Vectorization**
-
-   * Convert text into numerical feature vectors
-5. **Similarity Computation**
-
-   * Compute **cosine similarity** between all movie vectors
-6. **Recommendation Function**
-
-   * Return top 5 most similar movies based on similarity scores
-7. **Poster Fetching**
-
-   * Integrate with **TMDb API** to fetch movie posters via `id`
-8. **WordCloud Visualization**
-
-   * Generate a visual representation of the most frequent keywords
-9. **Deploy with Streamlit**
-
-   * Build an interactive UI for live recommendations
+The system provides an interactive web interface through which users can select movies and explore recommendations.
 
 ---
 
-## 🌐 Web App Preview
-
-> Type a movie title → Get top 5 similar movies + poster images + movie description
-
-<p align="center">
-  <img src="images/app_screenshot.png" alt="App Screenshot" width="85%" />
-  <br />
-  <i>📸 Streamlit Web App: User enters movie name and sees recommendations with posters</i>
-</p>
-
----
-
-## ☁️ WordCloud Visualization
-
-We use **WordCloud** to visualize the most frequent terms in the movie metadata (genres, keywords, overview). This helps understand what topics or themes dominate the dataset.
-
-<p align="center">
-  <img src="images/wordcloud.jpg" alt="WordCloud" width="75%" />
-  <br />
-  <i>🔍 WordCloud showing dominant terms in movie descriptions</i>
-</p>
+## ✨ Features
+- **Smart Natural Language Processing:** Combines genres, keywords, and plot overviews to understand thematic nuances.
+- **On-the-Fly Cosine Similarity:** Computes similarity in real-time (~10ms) against a sparse TF-IDF matrix, keeping memory footprint ultra-low (~2MB) and avoiding heavy matrix pre-allocation.
+- **Cinematic Dark Theme:** A modern streaming-style responsive web interface built with Streamlit.
+- **Interactive Search & Dropdown:** Filter and choose from over 4,300 movies instantly.
+- **Dynamic Poster Fetching:** Fetches high-resolution posters via The Movie Database (TMDb) API on demand for recommended films.
+- **Graceful Fallbacks:** If the TMDb API key is not configured or if network timeouts occur, the app seamlessly provides clean visual placeholders without crashing.
+- **Deployment Ready:** Configured for one-click deployment on Streamlit Community Cloud.
 
 ---
 
-## 📦 Installation & Setup
+## 🛠️ Technologies Used
+- **Python 3.10+** — Core programming language
+- **Streamlit** — Web interface and interactive components
+- **Pandas & NumPy** — Data manipulation and numerical operations
+- **Scikit-learn** — TF-IDF Vectorizer and pairwise Cosine Similarity
+- **NLTK (Natural Language Toolkit)** — Text tokenization (`TreebankWordTokenizer`) and English stopword filtering
+- **Requests** — HTTP client for dynamic TMDb API poster retrieval
+- **Python-dotenv** — Environment variable management
 
+---
+
+## 🧠 How the Recommendation Algorithm Works
+
+```
+Raw Movie Data (movies.csv)
+       │
+       ▼
+Extract Features (genres + keywords + overview)
+       │
+       ▼
+NLP Preprocessing (Clean text, Tokenize, Remove Stopwords)
+       │
+       ▼
+TF-IDF Vectorization (Extract 5,000 top n-gram features into a sparse matrix)
+       │
+       ▼ [User selects a movie]
+Compute Cosine Similarity:
+   Similarity(u, v) = (u · v) / (||u|| * ||v||)
+       │
+       ▼
+Rank top N movies by similarity score & fetch posters dynamically
+```
+
+1. **Feature Merging:** The textual fields `genres`, `keywords`, and `overview` are concatenated into a single string for each movie.
+2. **Text Preprocessing:** Characters outside the alphabet are removed, text is lowercased, and tokens are extracted. Stopwords (e.g., *the*, *and*, *is*) are filtered out.
+3. **TF-IDF Vectorization:** The corpus is transformed into a high-dimensional sparse TF-IDF matrix ($5,000$ features).
+4. **On-demand Similarity:** When a user chooses a movie, its vector is compared against all movie vectors using cosine similarity, computing the angular difference between textual features.
+5. **Ranking:** The movies with the highest similarity scores (excluding the selected film itself) are presented with their match percentage, genre tags, and overview.
+
+---
+
+## 📁 Project Structure
+
+```
+movie-recommendation-system/
+├── app.py                  # Main Streamlit application entry point
+├── movies.csv              # TMDb dataset (metadata of 4,800+ movies)
+├── requirements.txt        # Python package dependencies
+├── run.bat                 # One-click Windows runner script
+├── .gitignore              # Git ignore rules for secrets and virtual envs
+└── README.md               # Complete project documentation
+```
+
+---
+
+## 💻 Local Installation & Setup (Windows)
+
+### Prerequisites
+- Python 3.10 or higher installed ([python.org](https://www.python.org))
+- Git installed ([git-scm.com](https://git-scm.com))
+
+### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/Toshaksha/recommendation-system.git
-cd recommendation-system
+git clone https://github.com/YOUR_USERNAME/movie-recommendation-system.git
+cd movie-recommendation-system
+```
+
+### Step 2: Create a Virtual Environment
+```powershell
+python -m venv .venv
+.\.venv\Scripts\activate
+```
+
+### Step 3: Install Dependencies
+```powershell
 pip install -r requirements.txt
 ```
 
-Set your TMDb API key in the script:
+---
 
-```python
-TMDB_API_KEY = "your_api_key_here"
+## 🔑 Configuring the TMDb API Key (Optional)
+
+The application functions completely without an API key using the local dataset. To display official movie posters:
+
+### Method A: Permanent Windows Environment Variable (Recommended)
+In PowerShell, run:
+```powershell
+[Environment]::SetEnvironmentVariable("TMDB_API_KEY", "YOUR_ACTUAL_TMDB_API_KEY", "User")
 ```
+*Note: Restart VS Code or open a new terminal after running this command so the environment variable takes effect.*
 
-To launch the web app:
+### Method B: Using a `.env` File
+Create a `.env` file in the project root:
+```env
+TMDB_API_KEY=YOUR_ACTUAL_TMDB_API_KEY
+```
+*(The `.env` file is excluded from Git to protect your credentials.)*
 
-```bash
+---
+
+## 🚀 Running the Application
+
+### Option 1: Quick Launch (Windows)
+Double-click [`run.bat`](run.bat).
+
+### Option 2: Terminal
+```powershell
+.\.venv\Scripts\activate
 streamlit run app.py
 ```
+Open **http://localhost:8501** in your browser.
 
 ---
 
-## 🧪 Example Usage
+## 🌐 Deploying to Streamlit Community Cloud (Free)
 
-```python
-Input: "Avatar"
-Output:
- - Star Trek Beyond
- - Jupiter Ascending
- - Guardians of the Galaxy
- - Transformers: Dark of the Moon
- - Iron Man 3 
-```
+1. **Push your code to GitHub:**
+   - Create a new public repository on GitHub named `movie-recommendation-system`.
+   - Push your project code (ensure `.env` and `.venv` are ignored).
 
-Each result includes the title , the movie poster and movie description.
+2. **Connect to Streamlit Cloud:**
+   - Go to [share.streamlit.io](https://share.streamlit.io/) and sign in with your GitHub account.
+   - Click **New app**.
+   - Select your repository: `YOUR_USERNAME/movie-recommendation-system`.
+   - Branch: `main` (or `master`).
+   - Main file path: `app.py`.
 
----
+3. **Configure Secrets on Streamlit Cloud:**
+   - Under **Advanced settings** (or in **App Settings → Secrets**), paste:
+     ```toml
+     TMDB_API_KEY = "YOUR_ACTUAL_TMDB_API_KEY"
+     ```
+   - Click **Save**.
 
-## 🗂 Project Structure
-
-```
-movie-recommendation-nlp/
-│
-├── app.py                              # Streamlit app
-├── movie_recommendation_system.ipynb   # Development notebook/script
-├── movies.csv                          # Movie metadata
-├── requirements.txt                    # Python packages
-├── images/
-│   ├── app_screenshot.png              # Screenshot of Streamlit app
-│   └── wordcloud.png                   # WordCloud image
-└── README.md                           # Project documentation
-```
+4. **Deploy:**
+   - Click **Deploy!** Your app will build and go live on a public URL (`https://<your-app-name>.streamlit.app`).
 
 ---
 
+## 🛠️ Troubleshooting
 
-
-## 🔧 Tools & Libraries Used
-
-* Python 3.x
-* **Pandas**, **NumPy** – Data processing
-* **NLTK** – Text preprocessing
-* **Scikit-learn** – TF-IDF, Cosine similarity
-* **Requests** – API integration
-* **Streamlit** – Web UI
-* **Matplotlib**, **WordCloud** – Visualization
-* **TMDb API** – Fetching movie posters
+| Issue | Cause | Solution |
+|---|---|---|
+| **Posters showing placeholder images** | TMDb API key missing or invalid | Verify `TMDB_API_KEY` is set in Windows environment variables or Streamlit Secrets. |
+| **Environment variable not recognized** | Terminal was opened before setting variable | Completely close and reopen VS Code / PowerShell. |
+| **NLTK `punkt_tab` error** | Outdated NLTK corpus cache | The app auto-downloads `punkt_tab` on boot. Ensure internet access is available during first run. |
+| **ModuleNotFoundError** | Virtual environment not active | Activate with `.\.venv\Scripts\activate` before running `streamlit run app.py`. |
 
 ---
 
-## 👤 Author
-
-**Toshaksha** – [GitHub Profile](https://github.com/Toshaksha)
-
----
-
-⭐ *Found this project useful? Give it a star and share with others!*
-
----
+## 📄 License
+This project is open-source and available under the [MIT License](LICENSE).

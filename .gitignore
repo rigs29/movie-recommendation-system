@@ -3,28 +3,33 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Environment files
-.env
+# Virtual environments
 .venv/
 env/
 venv/
+ENV/
+
+# Environment variables & secrets
+.env
+.env*
+*.env
+secrets.toml
+.streamlit/secrets.toml
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
-# VSCode settings
+# IDE & OS files
 .vscode/
-
-# OS files
-.DS_Store
-
-# Python package distribution
-*.egg-info/
-dist/
-build/
-
-# PyCharm
 .idea/
+.DS_Store
+Thumbs.db
 
-# Streamlit cache and logs (optional)
+# Streamlit cache and logs
 .streamlit/
+
+# Local backups and unrelated projects
+app_original.py
+app_backup_*.py
+hospital-system/
+run_hospital.bat
